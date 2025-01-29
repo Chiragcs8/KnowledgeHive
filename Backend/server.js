@@ -45,8 +45,9 @@ mongoose
   .catch(e => console.log(e)); // Catches and logs any errors that occur during the connection process.
 
 
- 
+//routes configuration
 
+  
 app.use((err, req, res, next) => {
     console.log(err.stack);
      // Logs the error stack trace for debugging.
