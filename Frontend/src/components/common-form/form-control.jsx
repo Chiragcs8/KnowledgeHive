@@ -10,8 +10,9 @@ import {
 import { Textarea } from "../ui/textarea";
 
 function FormControls({ formControls = [], formData, setFormData }) {
-  function renderComponentByType(getControlItem) {
+  function renderComponentByType(getControlItem) { // here we will be getting each and every input element
     let element = null;
+    const currentControlItemValue = formData[getControlItem.name] || "" //here we will manage value and this value will be formData we  will be reciving
 
     switch (getControlItem.componentType) {
       case "input":
@@ -20,13 +21,24 @@ function FormControls({ formControls = [], formData, setFormData }) {
             id={getControlItem.name}
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
-            type={getControlItem.type}
-          />
+            type={getControlItem.type} 
+            value={currentControlItemValue}
+            onChange={(event)=> setFormData({
+              ...formData,//destructure formData
+              [getControlItem.name]: event.target.value,
+            })}
+          /> //this will handle each and every element
         );
         break;
       case "select":
         element = (
-          <Select>
+          <Select 
+          onValueChange={(value)=> setFormData({
+            ...formData,
+            [getControlItem.name] : value
+          })}
+          value={currentControlItemValue}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder={getControlItem.label} />
             </SelectTrigger>
@@ -47,6 +59,11 @@ function FormControls({ formControls = [], formData, setFormData }) {
         id={getControlItem.name}
         name={getControlItem.name}
         placeholder={getControlItem.placeholder}
+        value={currentControlItemValue}
+        onChange={(event)=> setFormData({
+          ...formData,//destructure formData
+          [getControlItem.name]: event.target.value,
+        })}
         />;
         break;
 
@@ -56,6 +73,11 @@ function FormControls({ formControls = [], formData, setFormData }) {
         name={getControlItem.name}
         placeholder={getControlItem.placeholder}
         type={getControlItem.type}
+        value={currentControlItemValue}
+        onChange={(event)=> setFormData({
+          ...formData,//destructure formData
+          [getControlItem.name]: event.target.value,
+        })}
         />
         break;
     }

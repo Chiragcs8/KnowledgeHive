@@ -11,6 +11,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
  // Imports mongoose to interact with MongoDB database.
 
+const authRotes = require('./routes/auth-routes/index.js');
+
+
+
+
+
 
 const app = express();
  // Initializes an Express app instance to handle HTTP requests.
@@ -22,7 +28,7 @@ const app = express();
 const MONGO_URI = process.env.MONGO_URI;
  // Retrieves the MongoDB URI from environment variables to connect to the database.
 
-cors({
+app.use(cors({
      
     origin: process.env.CLIENT_URL,
      // Defines the allowed origin (client URL) for requests.
@@ -30,9 +36,9 @@ cors({
      // Specifies the allowed HTTP methods for cross-origin requests.
     allowedHeaders: ["Content-Type", "Authorization"]
      // Defines the allowed headers in the request.
-});
+})
  // Configures CORS options to control which domains can make requests to this server.
-
+)
 
 app.use(express.json());
  // Middleware to parse incoming requests with JSON payloads.
@@ -46,7 +52,7 @@ mongoose
 
 
 //routes configuration
-
+app.use('/auth', authRotes);
   
 app.use((err, req, res, next) => {
     console.log(err.stack);
