@@ -1,7 +1,22 @@
+import { Button } from "@/components/ui/button";
+import { AuthContext } from "@/context/auth-context";
+import { useContext } from "react";
 
 
 function StudentHomePage() {
-    return <div>Home page</div>;
+
+    const {resetCredentials} = useContext(AuthContext)
+
+    function handleLogout() {
+        resetCredentials();
+        sessionStorage.clear();
+      }
+    
+
+
+    return <div>Home page
+        <Button onClick={handleLogout}>Logout</Button>
+    </div>;
 }
 
 export default StudentHomePage;
