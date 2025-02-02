@@ -162,7 +162,7 @@ export const courseLandingInitialFormData = {
 };
 
 
-export const CourseCurriculumInitialFormData = [
+export const courseCurriculumInitialFormData = [
   {
     title : "",
     videoUrl : "",
