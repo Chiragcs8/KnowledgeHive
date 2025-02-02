@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "./context/auth-context";
+import InstructorProvider from "./context/instructor-context";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider>
-      <App />
-    </AuthProvider> 
-  </BrowserRouter> // A <Router> for use in web browsers. Provides the cleanest URLs. 
+      <InstructorProvider>
+        <App />
+      </InstructorProvider>
+    </AuthProvider>
+  </BrowserRouter> // A <Router> for use in web browsers. Provides the cleanest URLs.
   //and warping app in authprovider
 );
