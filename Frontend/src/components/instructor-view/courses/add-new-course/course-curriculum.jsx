@@ -11,7 +11,7 @@ function CourseCurriculum() {
   const { courseCurriculumFormData, setCourseCurriculumFormData } =
     useContext(InstructorContext);
 
-    function handleewLecture(){
+    function handleNewLecture(){
       setCourseCurriculumFormData([
         ...courseCurriculumFormData,
         {
@@ -20,8 +20,35 @@ function CourseCurriculum() {
       ])
     }
 
-    console.log(courseCurriculumFormData);
     
+    
+    function handleCourseTitleChange(event, currentIndex){
+      let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+      
+      
+      copyCourseCurriculumFormData[currentIndex] = {...copyCourseCurriculumFormData[currentIndex],
+        title: event.target.value,
+      };
+      
+      setCourseCurriculumFormData(copyCourseCurriculumFormData);
+      
+    }
+
+
+    function handleFreePreviewChange(currentValue, currentIndex){
+      console.log(currentValue, currentIndex);
+      let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+      
+      
+      copyCourseCurriculumFormData[currentIndex] = {...copyCourseCurriculumFormData[currentIndex],
+        freePreview: currentValue,
+      };
+      
+      setCourseCurriculumFormData(copyCourseCurriculumFormData);
+      
+    }
+
+    console.log(courseCurriculumFormData);
 
   return (
     <Card>
@@ -30,7 +57,7 @@ function CourseCurriculum() {
       </CardHeader>
       <CardContent>
         <Button
-        onClick={handleewLecture}
+        onClick={handleNewLecture}
         >Add Lecture</Button>
         <div className="mt-4 space-y-4">
           {courseCurriculumFormData.map((curriculumItem, index) => (
@@ -41,10 +68,13 @@ function CourseCurriculum() {
                 name={`title-${index+1}`}
                 placeholder="Enter lecture title"
                 className="max-w-96"
+                onChange={(event) => handleCourseTitleChange(event, index)}
+                value={courseCurriculumFormData[index]?.title}
                 />
                 <div className="flex items-center space-x-2">
                     <Switch
-                    checked={false}
+                    onCheckedChange={(value) => handleFreePreviewChange(value, index)}
+                    checked={courseCurriculumFormData[index]?.freePreview}
                     id={`freePreview-${index+1}`}
                     />
                     <Label htmlFor={`freePreview-${index+1}`}>Free Preview</Label>
