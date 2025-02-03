@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
  // Imports mongoose to interact with MongoDB database.
 
 const authRotes = require('./routes/auth-routes/index.js');
+const mediaRoutes = require('./routes/instructor-routes/media-routes.js');
 
 
 
@@ -53,6 +54,8 @@ mongoose
 
 //routes configuration
 app.use('/auth', authRotes);
+app.use('/media', mediaRoutes);
+
   
 app.use((err, req, res, next) => {
     console.log(err.stack);
