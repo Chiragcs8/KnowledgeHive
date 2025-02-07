@@ -5,6 +5,7 @@ import { Slider } from "../ui/slider";
 import { Button } from "../ui/button";
 import {
   Maximize,
+  Minimize,
   Pause,
   Play,
   RotateCcw,
@@ -74,7 +75,7 @@ function VideoPlayer({
     const date = new Date(seconds * 1000);
     const hh = date.getUTCHours();
     const mm = date.getUTCMinutes();
-    const ss = date.getUTCSeconds();
+    const ss = pad(date.getUTCSeconds());
 
     if (hh) {
       return `${hh}:${pad(mm)}:${ss}`;
@@ -85,7 +86,7 @@ function VideoPlayer({
 
   const handleFullScreen = useCallback(() => {
     if (!isFullscreen) {
-      if (playerContainerRef?.current.requestFullScreen) {
+      if (playerContainerRef?.current.requestFullscreen) {
         playerContainerRef?.current?.requestFullscreen();
       }
     } else {

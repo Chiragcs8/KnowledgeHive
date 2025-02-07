@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import VideoPlayer from "@/components/video-player";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
-import { mediaUploadService } from "@/services";
+import { mediaDeleteService, mediaUploadService } from "@/services";
 import { useContext } from "react";
 
 function CourseCurriculum() {
@@ -52,6 +52,17 @@ function CourseCurriculum() {
     setCourseCurriculumFormData(copyCourseCurriculumFormData);
   }
 
+  function isCourseCurriculumFormDataValid() {
+    return courseCurriculumFormData.every((item) => {
+      return (
+        item &&
+        typeof item === 'object' &&
+        item.title.trim() !== '' &&
+        item.videoUrl.trim() !== ''
+      )
+    })
+  }
+
   async function handleSingleLectureUpload(event, currentIndex) {
     console.log(event.target.files);
     const selectedFile = event.target.files[0];
@@ -83,6 +94,27 @@ function CourseCurriculum() {
     }
   }
 
+  async function hadleReplaceVideo(currentIndex){
+    let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+    const getCurrentVideoPublicId = copyCourseCurriculumFormData[currentIndex].public_id;
+
+    const deleteCurrentMediaResponse = await mediaDeleteService(getCurrentVideoPublicId)
+
+    console.log(deleteCurrentMediaResponse, "deleteCurrentMediaResponse");
+    
+    if(deleteCurrentMediaResponse?.success){
+      copyCourseCurriculumFormData[currentIndex] = {...copyCourseCurriculumFormData[currentIndex],
+        videoUrl: '',
+        public_id: ''
+      }
+    };
+
+    setCourseCurriculumFormData(copyCourseCurriculumFormData);
+
+  }
+
+
+
   console.log(courseCurriculumFormData);
 
   return (
@@ -91,7 +123,7 @@ function CourseCurriculum() {
         <CardTitle>Create Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleNewLecture}>Add Lecture</Button>
+        <Button disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress} onClick={handleNewLecture}>Add Lecture</Button>
         {mediaUploadProgress ? (
           <MediaProgressbar
             isMediaUploading={mediaUploadProgress}
@@ -132,7 +164,7 @@ function CourseCurriculum() {
                       width="450px"
                       height="200px"
                     />
-                    <Button>Replace Video</Button>
+                    <Button onClick={() => hadleReplaceVideo(index)}>Replace Video</Button>
                     <Button className="bg-red-900">Delete Lecture</Button>
                   </div>
                 ) : (
