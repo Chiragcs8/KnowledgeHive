@@ -4,13 +4,83 @@ import CourseSettings from "@/components/instructor-view/courses/add-new-course/
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AuthContext } from "@/context/auth-context";
+import { InstructorContext } from "@/context/instructor-context";
+import { addNewCourseService } from "@/services";
+import { useContext } from "react";
 
 function AddNewCoursePage() {
+  const { courseLandingFormData, courseCurriculumFormData } =
+    useContext(InstructorContext);
+  const { auth } = useContext(AuthContext);
+
+  function isEmpty(value) {
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    }
+
+    return value === null || value === undefined || value === "";
+  }
+
+  function validateFormData() {
+    for (const key in courseLandingFormData) {
+      if (isEmpty(courseLandingFormData[key])) {
+        return false;
+      }
+    }
+
+    let hasFreePreview = false;
+
+    for (const item of courseCurriculumFormData) {
+      if (
+        isEmpty(item.title) ||
+        isEmpty(item.videoUrl) ||
+        isEmpty(item.public_id)
+      ) {
+        return false;
+      }
+
+      if (item.freePreview) {
+        hasFreePreview = true; // fpund at least one free preview
+      }
+    }
+
+
+
+    return hasFreePreview; // return true if has at least one free preview, false otherwise
+  }
+
+  async function handleCreateCourse() {
+    const courseFinalFormData = {
+      instructorId: auth?.user?._id,
+      instructorName: auth?.user?.userName,
+      date: new Date(),
+      ...courseLandingFormData,
+      students: [
+      ],
+      curriculum: courseCurriculumFormData,
+      isPublished: true,
+    };
+
+    const response = await addNewCourseService(courseFinalFormData);
+
+    // if(response?.sucess){
+
+    // }
+
+    console.log(courseFinalFormData, 'courseFinalFormData');
+    
+  }
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between">
         <h1 className="text-3xl font-extrabold mb-5">Create a new course</h1>
-        <Button className="text-sm tracking-wider font-bold px-8">
+        <Button
+          disabled={!validateFormData()}
+          className="text-sm tracking-wider font-bold px-8"
+          onClick={handleCreateCourse}
+        >
           SUBMIT
         </Button>
       </div>
@@ -20,17 +90,19 @@ function AddNewCoursePage() {
             <Tabs defaultValue="curriculm" className="space-y-4">
               <TabsList>
                 <TabsTrigger value="curriculm">Curriculum</TabsTrigger>
-                <TabsTrigger value="course-landing-page">Course Landing Page</TabsTrigger>
+                <TabsTrigger value="course-landing-page">
+                  Course Landing Page
+                </TabsTrigger>
                 <TabsTrigger value="setttings">Settings</TabsTrigger>
               </TabsList>
               <TabsContent value="curriculm">
-                <CourseCurriculum/>
+                <CourseCurriculum />
               </TabsContent>
               <TabsContent value="course-landing-page">
-                <CourseLanding/>
+                <CourseLanding />
               </TabsContent>
               <TabsContent value="setttings">
-                <CourseSettings/>
+                <CourseSettings />
               </TabsContent>
             </Tabs>
           </div>
