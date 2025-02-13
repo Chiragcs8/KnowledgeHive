@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/auth-context";
 import { InstructorContext } from "@/context/instructor-context";
-import { fetchInstructorListServixe } from "@/services";
+import { fetchInstructorListService } from "@/services";
 
 function InstructorDashboardpage() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -15,7 +15,7 @@ function InstructorDashboardpage() {
     useContext(InstructorContext);
 
   async function fetchAllCourses() {
-    const response = await fetchInstructorListServixe();
+    const response = await fetchInstructorListService();
 
     console.log(response);
 

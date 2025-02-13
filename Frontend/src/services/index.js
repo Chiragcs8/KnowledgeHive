@@ -41,7 +41,7 @@ export async function mediaDeleteService(id) {
   return data;
 }
 
-export async function fetchInstructorListServixe() {
+export async function fetchInstructorListService() {
   const { data } = await axiosInstance.get("/instructor/course/get");
 
   return data;
@@ -51,8 +51,8 @@ export async function addNewCourseService(formData) {
 
   return data;
 }
-export async function fetchInstructorDetailsServixe(id) {
-  const { data } = await axiosInstance.get(`/instructor/course/details/${id}`);
+export async function fetchInstructorCourseDetailsService(id) {
+  const { data } = await axiosInstance.get(`/instructor/course/get/details/${id}`);
 
   return data;
 }
