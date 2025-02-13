@@ -9,13 +9,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  courseCurriculumInitialFormData,
+  courseLandingInitialFormData,
+} from "@/config";
+import { InstructorContext } from "@/context/instructor-context";
 import { Delete, Edit } from "lucide-react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 function InstructorCourse({ listOfCourses }) {
   const navigate = useNavigate();
-
-
+  const {
+    setCurrentEditedCourseId,
+    setCourseLandingFormData,
+    setCourseCurriculumFormData,
+  } = useContext(InstructorContext);
 
   return (
     <Card>
@@ -23,7 +32,12 @@ function InstructorCourse({ listOfCourses }) {
         <CardTitle className="text-3xl font-bold">All Courses</CardTitle>
         <Button
           className="p-6"
-          onClick={() => navigate("/instructor/create-new-course")}
+          onClick={() => {
+            setCurrentEditedCourseId(null);
+            navigate("/instructor/create-new-course");
+            setCourseLandingFormData(courseLandingInitialFormData);
+            setCourseCurriculumFormData(courseCurriculumInitialFormData);
+          }}
         >
           Create New Coures
         </Button>
@@ -41,31 +55,31 @@ function InstructorCourse({ listOfCourses }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {
-                listOfCourses && listOfCourses.length > 0 ?
-                listOfCourses.map(course=> 
-                  <TableRow>
-                <TableCell className="font-medium">
-                  {course?.title}
-                </TableCell>
-                <TableCell>{course?.students?.length}</TableCell>
-                <TableCell>{course?.pricing}</TableCell>
-                <TableCell className="text-right">
-                  <Button 
-                  onClick={() => {
-                    navigate(`/instructor/edit-course/${course?._id}`)
-                  }}
-                  variant="ghost" size="sm">
-                    <Edit className="h-6 w-6" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Delete className="h-6 w-6" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-                ) : null
-              }
-              
+              {listOfCourses && listOfCourses.length > 0
+                ? listOfCourses.map((course) => (
+                    <TableRow>
+                      <TableCell className="font-medium">
+                        {course?.title}
+                      </TableCell>
+                      <TableCell>{course?.students?.length}</TableCell>
+                      <TableCell>{course?.pricing}</TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          onClick={() => {
+                            navigate(`/instructor/edit-course/${course?._id}`);
+                          }}
+                          variant="ghost"
+                          size="sm"
+                        >
+                          <Edit className="h-6 w-6" />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Delete className="h-6 w-6" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : null}
             </TableBody>
           </Table>
         </div>
