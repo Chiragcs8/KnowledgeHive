@@ -157,21 +157,42 @@ function CourseCurriculum() {
             ? []
             : [...courseCurriculumFormData];
 
-            copyCourseCurriculumFormData = [
-              ...copyCourseCurriculumFormData,
-              ...response?.data.map((item,index) =>({
-                videoUrl : item?.url,
-                public_id : item?.public_id,
-                title: `Lecture ${copyCourseCurriculumFormData.length + (index + 1)}`,
-                freePreview: false,
-              }))
-            ]
-            setCourseCurriculumFormData(copyCourseCurriculumFormData)
-            setMediaUploadProgress(false)
+        copyCourseCurriculumFormData = [
+          ...copyCourseCurriculumFormData,
+          ...response?.data.map((item, index) => ({
+            videoUrl: item?.url,
+            public_id: item?.public_id,
+            title: `Lecture ${
+              copyCourseCurriculumFormData.length + (index + 1)
+            }`,
+            freePreview: false,
+          })),
+        ];
+        setCourseCurriculumFormData(copyCourseCurriculumFormData);
+        setMediaUploadProgress(false);
       }
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async function handleDeleteLecture(currentIndex) {
+    let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+
+    const getCurrentSelectedVideoPublicId =
+      copyCourseCurriculumFormData[currentIndex].public_id;
+
+    const response = await mediaDeleteService(getCurrentSelectedVideoPublicId);
+
+    if (response?.success) {
+      copyCourseCurriculumFormData = copyCourseCurriculumFormData.filter(
+        (_, index) => index !== currentIndex
+      );
+
+      setCourseCurriculumFormData(copyCourseCurriculumFormData);
+    }
+
+    console.log(copyCourseCurriculumFormData[currentIndex]);
   }
 
   return (
@@ -250,7 +271,12 @@ function CourseCurriculum() {
                     <Button onClick={() => hadleReplaceVideo(index)}>
                       Replace Video
                     </Button>
-                    <Button className="bg-red-900">Delete Lecture</Button>
+                    <Button
+                      onClick={() => handleDeleteLecture(index)}
+                      className="bg-red-900"
+                    >
+                      Delete Lecture
+                    </Button>
                   </div>
                 ) : (
                   <Input
