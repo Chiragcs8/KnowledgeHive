@@ -31,7 +31,6 @@ function AddNewCoursePage() {
   const navigate = useNavigate();
   const params = useParams();
 
-  console.log(params);
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -126,7 +125,6 @@ function AddNewCoursePage() {
     if (params?.courseId) setCurrentEditedCourseId(params?.courseId);
   }, [params?.courseId]);
 
-  console.log(params, "params");
   
 
   return (
