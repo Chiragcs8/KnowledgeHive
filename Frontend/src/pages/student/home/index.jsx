@@ -1,8 +1,24 @@
 import { Button } from "@/components/ui/button";
 import banner from "../../../../public/Banner-img.png";
 import { courseCategories } from "@/config";
+import { useContext, useEffect } from "react";
+import { StudentContext } from "@/context/student-context";
+import { fetchStudentViewCourseListService } from "@/services";
 
 function StudentHomePage() {
+  const { studentViewCouresesList, setStudentViewCouresesList } =
+    useContext(StudentContext);
+
+    async function fetchAllStudentViewCourses(){
+      const response = await fetchStudentViewCourseListService();
+      if(response?.success)setStudentViewCouresesList(response?.data)
+      }
+    
+    useEffect(()=>{
+      fetchAllStudentViewCourses()
+    },[])
+
+
   return (
     <div className="min-h-screen bg-white">
       <section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8">
@@ -35,8 +51,30 @@ function StudentHomePage() {
           ))}
         </div>
       </section>
+      <section className="py-12 px-4 lg:px-8">
+        <h2 className="text-2xl font-bold mb-6">Featured Coureses</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {
+            studentViewCouresesList && studentViewCouresesList.length > 0 ?
+            studentViewCouresesList.map(courseItem => <div className="border rounded-lg overflow-hidden shadow cursor-pointer">
+              <img
+              src={courseItem?.image}
+              width={300}
+              height={150}
+              className="w-full h-40 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="font-bold mb-2">{courseItem?.title}</h3>
+                <p className="text-sm text-gray-700 mb-2">{courseItem?.instructorName}</p>
+                <p className="font-bold text-[16px]">${courseItem?.pricing}</p>
+              </div>
+            </div>) : <h1>No Courses Found</h1>
+          }
+        </div>
+      </section>
     </div>
   );
 }
+
 
 export default StudentHomePage;
