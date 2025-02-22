@@ -23,11 +23,15 @@ function StudentViewCoursesPage() {
             Object.keys(filterOptions).map((keyItem)=> (
                 <div className="p-4 space-y-4">
                     <h3 className="font-bold mb-3">{keyItem.toUpperCase()}</h3>
-                    <div className="grid gap mt-2">
+                    <div className="grid gap-2 mt-2">
                       {
                         filterOptions[keyItem].map(option=> (
                           <Label className="flex font-medium items-center gap-3">
-                            <Checkbox checked={false}/>
+                            <Checkbox 
+                            checked={false}
+                            onCheckedChange={()=>handleFilterOnChange(keyItem, option.id)}
+                            />
+                            {option.label}
                           </Label>
                         ))
                       }
