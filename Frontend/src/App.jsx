@@ -8,8 +8,8 @@ import StudentViewCommonLayout from "./components/student-view/common-layout";
 import StudentHomePage from "./pages/student/home";
 import NotFoundPage from "./pages/not-found";
 import AddNewCoursePage from "./pages/instructor/add-new-course";
-import StudentViewCoursesPage from "./pages/courses";
-import StudentViewCoursesDetailPage from "./pages/course-details";
+import StudentViewCoursesPage from "./pages/student/courses";
+import StudentViewCoursesDetailPage from "./pages/student/course-details";
 
 function App() {
   const { auth } = useContext(AuthContext);
