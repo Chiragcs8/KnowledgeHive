@@ -1,62 +1,93 @@
+const Course = require("../../models/Course.js");
 
-const Course = require('../../models/Course.js')
+const getAllStudentViewCourses = async (req, res) => {
+  try {
+    const {
+      category = [],
+      level = [],
+      primaryLanguage = [],
+      sortBy = "price-lowtohigh",
+    } = req.query;
 
-const getAllStudentViewCourses= async(req, res)=>{
-    try {
-        
-        const coursesList = await Course.find({})
-
-        if(coursesList.length === 0){
-            return res.status(404).json({
-                success: false,
-                message: "No courses found",
-                data: []
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Courses fetched successfully",
-            data: coursesList
-        })
-    } catch (e) {
-        console.log(e);
-        res.status(500).json({
-            success: false,
-            message: "Some Error occurred"
-        })
-        
+    let filters = {};
+    if (category.length) {
+      filters.category = { $in: category.split(",") };
     }
-}
-
-const getAllStudentViewCourseDetails= async(req, res)=>{
-    try {
-        
-        const {id} = req.params;
-        const courseDetails = await Course.findById(id);
-
-        if(!courseDetails){
-            return res.status(404).json({
-                success: false,
-                message: "Course not found",
-                data: null
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Course fetched successfully",
-            data: courseDetails
-        })
-
-    } catch (e) {
-        console.log(e);
-        res.status(500).json({
-            success: false,
-            message: "Some Error occurred"
-        })
-        
+    if (level.length) {
+      filters.level = { $in: level.split(",") };
     }
-}
+    if (primaryLanguage.length) {
+      filters.primaryLanguage = { $in: primaryLanguage.split(",") };
+    }
 
-module.exports = { getAllStudentViewCourses, getAllStudentViewCourseDetails }
+    let sortParam = {};
+    switch (sortBy) {
+        case "price-lowtohigh":
+            sortParam.pricing = 1
+
+
+            break;
+        case "price-hightolow":
+            sortParam.pricing = -1
+
+            break;
+        case "title-atoz":
+            sortParam.title = 1
+
+            break;
+        case "title-ztoa":
+            sortParam.title = -1
+
+            break;
+    
+        default:
+            sortParam.pricing = 1
+            break;
+    }
+
+    const coursesList = await Course.find(filters).sort(sortParam);
+
+
+
+    res.status(200).json({
+      success: true,
+      message: "Courses fetched successfully",
+      data: coursesList,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some Error occurred",
+    });
+  }
+};
+
+const getAllStudentViewCourseDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const courseDetails = await Course.findById(id);
+
+    if (!courseDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Course fetched successfully",
+      data: courseDetails,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some Error occurred",
+    });
+  }
+};
+
+module.exports = { getAllStudentViewCourses, getAllStudentViewCourseDetails };

@@ -8,18 +8,39 @@ import {
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config/index.jsx";
 import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseListService } from "@/services";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+function createSerchParamsHelper(filterParams) {
+  const queryParams = [];
+
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",");
+
+      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+    }
+  }
+
+  return queryParams.join("&");
+}
 
 function StudentViewCoursesPage() {
   const [sort, setSort] = useState("price-lowtohigh");
   const [filters, setFilters] = useState({});
-  const { studentViewCouresesList, setStudentViewCouresesList } =
-    useContext(StudentContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    studentViewCouresesList,
+    setStudentViewCouresesList,
+    loadingState,
+    setLoadingState,
+  } = useContext(StudentContext);
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
     let copyFilters = { ...filters };
@@ -45,13 +66,38 @@ function StudentViewCoursesPage() {
     sessionStorage.setItem("filters", JSON.stringify(copyFilters));
   }
 
-  async function fetchAllStudentViewCourses() {
-    const response = await fetchStudentViewCourseListService();
-    if (response?.success) setStudentViewCouresesList(response?.data);
+  async function fetchAllStudentViewCourses(filters, sort) {
+    const query = new URLSearchParams({
+      ...filters,
+      sortBy: sort,
+    });
+    const response = await fetchStudentViewCourseListService(query);
+    if (response?.success) {
+      setStudentViewCouresesList(response?.data);
+      setLoadingState(false);
+    }
   }
 
   useEffect(() => {
-    fetchAllStudentViewCourses();
+    const buildQueryStringForFilters = createSerchParamsHelper(filters);
+
+    setSearchParams(new URLSearchParams(buildQueryStringForFilters));
+  }, [filters]);
+
+  useEffect(() => {
+    setSort("price-lowtohigh");
+    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
+  }, []);
+
+  useEffect(() => {
+    if (filters !== null && sort !== null)
+      fetchAllStudentViewCourses(filters, sort);
+  }, [filters, sort]);
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem("filters");
+    };
   }, []);
 
   console.log(filters);
@@ -60,9 +106,9 @@ function StudentViewCoursesPage() {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
       <div className="flex flex-col md:flex-row gap-4">
-        <aside className="w-full md:w-64 space-y-4">
+        <aside className="w-full md:w-64">
           {Object.keys(filterOptions).map((keyItem) => (
-            <div className="p-4 space-y-4">
+            <div className="p-4 border-b">
               <h3 className="font-bold mb-3">{keyItem.toUpperCase()}</h3>
               <div className="grid gap-2 mt-2">
                 {filterOptions[keyItem].map((option) => (
@@ -114,9 +160,10 @@ function StudentViewCoursesPage() {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-sm text-black font-medium">10 Results</span>
+            <span className="text-sm text-black font-medium">{studentViewCouresesList.length} Results</span>
           </div>
           <div className="space-y-4">
+            
             {studentViewCouresesList && studentViewCouresesList.length > 0 ? (
               studentViewCouresesList.map((courseItem) => (
                 <Card className="cursor-pointer" key={courseItem?._id}>
@@ -153,7 +200,8 @@ function StudentViewCoursesPage() {
                 </Card>
               ))
             ) : (
-              <h1>No Courses Found</h1>
+              loadingState ? <Skeleton /> :
+              <h1 className="font-extrabold text-4xl">No Courses Found</h1>
             )}
           </div>
         </main>
