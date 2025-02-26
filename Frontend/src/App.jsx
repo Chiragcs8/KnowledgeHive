@@ -68,8 +68,11 @@ function App() {
       >
         <Route path="" element={<StudentHomePage />} />
         <Route path="home" element={<StudentHomePage />} />
-        <Route path="courses" element={<StudentViewCoursesPage />} />
-        <Route path="courses/details/:id" element={<StudentViewCoursesDetailPage />} />
+        <Route path="course" element={<StudentViewCoursesPage />} />
+        <Route
+          path="courses/details/:id"
+          element={<StudentViewCoursesDetailPage />}
+        />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
