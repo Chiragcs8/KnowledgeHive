@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
+import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
@@ -28,6 +29,9 @@ function StudentViewCoursesDetailPage() {
     loadingState,
     setLoadingState,
   } = useContext(StudentContext);
+
+  const {auth} = useContext(AuthContext)
+
   const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
     useState(null);
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
@@ -51,6 +55,27 @@ function StudentViewCoursesDetailPage() {
 
   function handleSetFreePreview(getCurrentVideoInfo) {
     setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
+  }
+
+  async function handleCreatePayment(){
+    const paymentPayload = {
+      userId : auth?.user?._id,
+      userName : auth?.user?.userName,
+      userEmail : auth?.user?.userEmail,
+      orderstatus : 'pending',
+      paymentMethod : 'paypal',
+      paymentStatus : 'initiated',
+      orderDate : new Date(),
+      paymentId : '',
+      payerId : '',
+      instructorId : studentViewCourseDetails?.instructorId,
+      instructorName : studentViewCourseDetails?.instructorName,
+      courseImage : studentViewCourseDetails?.image,
+      courseTitle : studentViewCourseDetails?.title,
+      courseId : studentViewCourseDetails?._id,
+      coursePricing : studentViewCourseDetails?.pricing,
+    }
+    
   }
 
   useEffect(() => {
@@ -183,7 +208,7 @@ function StudentViewCoursesDetailPage() {
                   ${studentViewCourseDetails?.pricing}
                 </span>
               </div>
-              <Button className="w-full">Buy Now</Button>
+              <Button onClick={handleCreatePayment} className="w-full">Buy Now</Button>
             </CardContent>
           </Card>
         </aside>
