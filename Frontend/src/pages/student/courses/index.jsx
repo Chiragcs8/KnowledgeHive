@@ -101,7 +101,6 @@ function StudentViewCoursesPage() {
     };
   }, []);
 
-  console.log(filters);
 
   return (
     <div className="container mx-auto p-4">
