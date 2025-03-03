@@ -66,7 +66,7 @@ function StudentViewCoursesDetailPage() {
       userId: auth?.user?._id,
       userName: auth?.user?.userName,
       userEmail: auth?.user?.userEmail,
-      orderstatus: "pending",
+      orderStatus: "pending",
       paymentMethod: "paypal",
       paymentStatus: "initiated",
       orderDate: new Date(),
@@ -83,12 +83,12 @@ function StudentViewCoursesDetailPage() {
     console.log(paymentPayload, "paymentPayload");
     const response = await createPaymentService(paymentPayload);
 
-    if (response?.success) {
+    if (response.success) {
       sessionStorage.setItem(
-        "currentOrederId",
+        "currentOrderId",
         JSON.stringify(response?.data?.orderId)
       );
-      setApprovalUrl(response?.data?.approvalUrl);
+      setApprovalUrl(response?.data?.approveUrl);
     }
   }
 

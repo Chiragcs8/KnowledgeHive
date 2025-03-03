@@ -9,7 +9,7 @@ const createOrder = async (req, res) => {
       userId,
       userName,
       userEmail,
-      orderstatus,
+      orderStatus,
       paymentMethod,
       paymentStatus,
       orderDate,
@@ -67,7 +67,7 @@ const createOrder = async (req, res) => {
           userId,
           userName,
           userEmail,
-          orderstatus,
+          orderStatus,
           paymentMethod,
           paymentStatus,
           orderDate,
@@ -120,7 +120,7 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
     }
 
     order.paymentStatus = "paid";
-    order.orderstatus = "confirmed";
+    order.orderStatus = "confirmed";
     order.paymentId = paymentId;
     order.payerId = payerId;
 
