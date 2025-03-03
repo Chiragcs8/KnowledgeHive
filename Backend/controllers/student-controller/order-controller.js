@@ -28,7 +28,7 @@ const createOrder = async (req, res) => {
       payer: {
         payment_method: "paypal",
       },
-      redirect_url: {
+      redirect_urls: {
         return_url: `${process.env.CLIENT_URL}/payment-return`,
         cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
       },
@@ -84,7 +84,7 @@ const createOrder = async (req, res) => {
         await newlyCreatedCourseOrder.save();
 
         const approveUrl = paymentInfo.links.find(
-          (link) => link.rel == "approvel_url"
+          (link) => link.rel == "approval_url"
         ).href;
 
         res.status(201).json({
@@ -140,6 +140,7 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
         dateOfPurchase: order.orderDate,
         courseImage: order.courseImage,
       });
+      
       await studentCourses.save();
     } else {
       const newStudentCourses = new StudentCourses({
