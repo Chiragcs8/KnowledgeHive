@@ -140,7 +140,7 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
         dateOfPurchase: order.orderDate,
         courseImage: order.courseImage,
       });
-      
+
       await studentCourses.save();
     } else {
       const newStudentCourses = new StudentCourses({
@@ -181,6 +181,5 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
     });
   }
 };
-
 
 module.exports = { createOrder, capturePaymentAndFinalizeOrder };
