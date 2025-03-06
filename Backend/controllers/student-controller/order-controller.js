@@ -127,7 +127,7 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
     await order.save();
 
     //update out student course model
-    const studentCourses = await studentCourses.findOne({
+    const studentCourses = await StudentCourses.findOne({
       userId: order.userId,
     });
 
@@ -162,10 +162,12 @@ const capturePaymentAndFinalizeOrder = async (req, res) => {
     // update course schema students
     await Course.findByIdAndUpdate(order.courseId, {
       $addToSet: {
-        studentId: order.userId,
-        studentName: order.userName,
-        studentEmail: order.userEmail,
-        paidAmount: order.coursePricing,
+        students: {
+          studentId: order.userId,
+          studentName: order.userName,
+          studentEmail: order.userEmail,
+          paidAmount: order.coursePricing,
+        },
       },
     });
     res.status(200).json({

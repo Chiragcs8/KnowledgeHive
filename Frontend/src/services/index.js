@@ -88,7 +88,9 @@ export async function fetchStudentViewCourseListService(query) {
 }
 
 export async function fetchStudentViewCourseDetailsService(courseId) {
-  const { data } = await axiosInstance.get(`/student/course/get/details/${courseId}`);
+  const { data } = await axiosInstance.get(
+    `/student/course/get/details/${courseId}`
+  );
 
   return data;
 }
@@ -99,8 +101,16 @@ export async function createPaymentService(formData) {
   return data;
 }
 
-  export async function captureAndFinalizePaymentService(formData) {
-    const { data } = await axiosInstance.post("/student/order/capture", formData);
-  
-    return data;
-  }
+export async function captureAndFinalizePaymentService(
+  paymentId,
+  payerId,
+  orderId
+) {
+  const { data } = await axiosInstance.post(`/student/order/capture`, {
+    paymentId,
+    payerId,
+    orderId,
+  });
+
+  return data;
+}
