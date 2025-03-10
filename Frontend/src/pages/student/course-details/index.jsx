@@ -112,8 +112,8 @@ function StudentViewCoursesDetailPage() {
 
   if (loadingState) return <Skeleton />;
 
-  if(approvalUrl !== ''){
-    window.location.href= approvalUrl
+  if (approvalUrl !== "") {
+    window.location.href = approvalUrl;
   }
 
   const getIndexOfFreePreviewUrl =

@@ -10,8 +10,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config/index.jsx";
+import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { fetchStudentViewCourseListService } from "@/services";
+import { checkCoursePurchaseInfoService, fetchStudentViewCourseListService } from "@/services";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
@@ -42,6 +43,7 @@ function StudentViewCoursesPage() {
     setLoadingState,
   } = useContext(StudentContext);
   const navigate = useNavigate()
+  const { auth } = useContext(AuthContext);
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
     let copyFilters = { ...filters };
@@ -78,6 +80,22 @@ function StudentViewCoursesPage() {
       setLoadingState(false);
     }
   }
+
+  async function handleCourseNavigate(getCurrentCourseId) {
+    const response = await checkCoursePurchaseInfoService(
+      getCurrentCourseId,
+      auth?.user?._id
+    );
+
+    if (response?.success) {
+      if (response?.data) {
+        navigate(`/course-progress/${getCurrentCourseId}`);
+      } else {
+        navigate(`/course/details/${getCurrentCourseId}`);
+      }
+    }
+  }
+
 
   useEffect(() => {
     const buildQueryStringForFilters = createSerchParamsHelper(filters);
@@ -166,7 +184,10 @@ function StudentViewCoursesPage() {
             
             {studentViewCouresesList && studentViewCouresesList.length > 0 ? (
               studentViewCouresesList.map((courseItem) => (
-                <Card onClick={()=>navigate(`/course/details/${courseItem?._id}`)} className="cursor-pointer" key={courseItem?._id}>
+                <Card 
+                onClick={() => handleCourseNavigate(courseItem?._id)}
+                className="cursor-pointer"
+                key={courseItem?._id}>
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex shrink-0">
                       <img

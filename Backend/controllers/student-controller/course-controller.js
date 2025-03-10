@@ -1,4 +1,5 @@
-const Course = require("../../models/Course.js");
+const Course = require("../../models/Course");
+const StudentCourses = require("../../models/StudentCourses");
 
 const getAllStudentViewCourses = async (req, res) => {
   try {
@@ -8,6 +9,8 @@ const getAllStudentViewCourses = async (req, res) => {
       primaryLanguage = [],
       sortBy = "price-lowtohigh",
     } = req.query;
+
+    console.log(req.query, "req.query");
 
     let filters = {};
     if (category.length) {
@@ -48,19 +51,18 @@ const getAllStudentViewCourses = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Courses fetched successfully",
       data: coursesList,
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some Error occurred",
+      message: "Some error occured!",
     });
   }
 };
 
-const getAllStudentViewCourseDetails = async (req, res) => {
+const getStudentViewCourseDetails = async (req, res) => {
   try {
     const { id } = req.params;
     const courseDetails = await Course.findById(id);
@@ -68,23 +70,48 @@ const getAllStudentViewCourseDetails = async (req, res) => {
     if (!courseDetails) {
       return res.status(404).json({
         success: false,
-        message: "Course not found",
+        message: "No course details found",
         data: null,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Course fetched successfully",
       data: courseDetails,
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some Error occurred",
+      message: "Some error occured!",
     });
   }
 };
 
-module.exports = { getAllStudentViewCourses, getAllStudentViewCourseDetails };
+const checkCoursePurchaseInfo = async (req, res) => {
+  try {
+    const { id, studentId } = req.params;
+    const studentCourses = await StudentCourses.findOne({
+      userId: studentId,
+    });
+
+    const ifStudentAlreadyBoughtCurrentCourse =
+      studentCourses.courses.findIndex((item) => item.courseId === id) > -1;
+    res.status(200).json({
+      success: true,
+      data: ifStudentAlreadyBoughtCurrentCourse,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+module.exports = {
+  getAllStudentViewCourses,
+  getStudentViewCourseDetails,
+  checkCoursePurchaseInfo,
+};
