@@ -16,6 +16,7 @@ const instructorCourseRoutes = require("./routes/instructor-routes/course-routes
 const studentViewCourseRoutes = require("./routes/student-routes/course-routes.js");
 const studentViewOrderRoutes = require("./routes/student-routes/order-routes.js");
 const studentCoursesRoutes = require("./routes/student-routes/student-courses-routes.js");
+const studentCourseProgressRoutes = require("./routes/student-routes/course-progress-routes.js");
 
 
 const app = express();
@@ -55,6 +56,7 @@ app.use("/instructor/course", instructorCourseRoutes)
 app.use("/student/course", studentViewCourseRoutes)
 app.use("/student/order", studentViewOrderRoutes)
 app.use("/student/courses-bought", studentCoursesRoutes)
+app.use("/student/courses-progress", studentCourseProgressRoutes)
 
 
 app.use((err, req, res, next) => {
