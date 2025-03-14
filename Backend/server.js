@@ -18,7 +18,6 @@ const studentViewOrderRoutes = require("./routes/student-routes/order-routes.js"
 const studentCoursesRoutes = require("./routes/student-routes/student-courses-routes.js");
 const studentCourseProgressRoutes = require("./routes/student-routes/course-progress-routes.js");
 
-
 const app = express();
 // Initializes an Express app instance to handle HTTP requests.
 
@@ -52,12 +51,11 @@ mongoose
 //routes configuration
 app.use("/auth", authRotes);
 app.use("/media", mediaRoutes);
-app.use("/instructor/course", instructorCourseRoutes)
-app.use("/student/course", studentViewCourseRoutes)
-app.use("/student/order", studentViewOrderRoutes)
-app.use("/student/courses-bought", studentCoursesRoutes)
-app.use("/student/course-progress", studentCourseProgressRoutes)
-
+app.use("/instructor/course", instructorCourseRoutes);
+app.use("/student/course", studentViewCourseRoutes);
+app.use("/student/order", studentViewOrderRoutes);
+app.use("/student/courses-bought", studentCoursesRoutes);
+app.use("/student/course-progress", studentCourseProgressRoutes);
 
 app.use((err, req, res, next) => {
   console.log(err.stack);

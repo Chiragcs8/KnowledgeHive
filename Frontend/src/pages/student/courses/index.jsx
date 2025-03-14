@@ -12,7 +12,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config/index.jsx";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { checkCoursePurchaseInfoService, fetchStudentViewCourseListService } from "@/services";
+import {
+  checkCoursePurchaseInfoService,
+  fetchStudentViewCourseListService,
+} from "@/services";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
@@ -42,7 +45,7 @@ function StudentViewCoursesPage() {
     loadingState,
     setLoadingState,
   } = useContext(StudentContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
@@ -96,7 +99,6 @@ function StudentViewCoursesPage() {
     }
   }
 
-
   useEffect(() => {
     const buildQueryStringForFilters = createSerchParamsHelper(filters);
 
@@ -118,7 +120,6 @@ function StudentViewCoursesPage() {
       sessionStorage.removeItem("filters");
     };
   }, []);
-
 
   return (
     <div className="container mx-auto p-4">
@@ -178,16 +179,18 @@ function StudentViewCoursesPage() {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-sm text-black font-medium">{studentViewCouresesList.length} Results</span>
+            <span className="text-sm text-black font-medium">
+              {studentViewCouresesList.length} Results
+            </span>
           </div>
           <div className="space-y-4">
-            
             {studentViewCouresesList && studentViewCouresesList.length > 0 ? (
               studentViewCouresesList.map((courseItem) => (
-                <Card 
-                onClick={() => handleCourseNavigate(courseItem?._id)}
-                className="cursor-pointer"
-                key={courseItem?._id}>
+                <Card
+                  onClick={() => handleCourseNavigate(courseItem?._id)}
+                  className="cursor-pointer"
+                  key={courseItem?._id}
+                >
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex shrink-0">
                       <img
@@ -220,8 +223,9 @@ function StudentViewCoursesPage() {
                   </CardContent>
                 </Card>
               ))
+            ) : loadingState ? (
+              <Skeleton />
             ) : (
-              loadingState ? <Skeleton /> :
               <h1 className="font-extrabold text-4xl">No Courses Found</h1>
             )}
           </div>
