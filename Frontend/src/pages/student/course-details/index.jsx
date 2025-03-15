@@ -96,7 +96,6 @@ function StudentViewCoursesDetailPage() {
       coursePricing: studentViewCourseDetails?.pricing,
     };
 
-    console.log(paymentPayload, "paymentPayload");
     const response = await createPaymentService(paymentPayload);
 
     if (response.success) {
