@@ -162,7 +162,7 @@ function StudentViewCourseProgressPage() {
           </div>
         </div>
         <div
-          className={`fixed top-[64px] right-0 bottom-0 w-[400px] bg-[#1c1d1f] border-l border-gray-700 transition-all duration-300 ${
+          className={`fixed top-[69.2px] right-0 bottom-0 w-[400px] bg-[#1c1d1f] border-l border-gray-700 transition-all duration-300 ${
             isSideBarOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
