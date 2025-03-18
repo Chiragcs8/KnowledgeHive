@@ -3,21 +3,49 @@ import banner from "../../../../public/Banner-img.png";
 import { courseCategories } from "@/config";
 import { useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context";
-import { fetchStudentViewCourseListService } from "@/services";
+import { checkCoursePurchaseInfoService, fetchStudentViewCourseListService } from "@/services";
+import { AuthContext } from "@/context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 function StudentHomePage() {
   const { studentViewCouresesList, setStudentViewCouresesList } =
     useContext(StudentContext);
+    const { auth }  = useContext(AuthContext)
+    const navigate = useNavigate();
 
-    async function fetchAllStudentViewCourses(){
-      const response = await fetchStudentViewCourseListService();
-      if(response?.success)setStudentViewCouresesList(response?.data)
+function handleNavigateToCoursesPage(getCurrentId){
+  sessionStorage.removeItem('filters');
+  const currentFilter = {
+    category : [getCurrentId]
+  }
+
+  sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+  navigate('/courses');
+}
+
+  async function fetchAllStudentViewCourses() {
+    const response = await fetchStudentViewCourseListService();
+    if (response?.success) setStudentViewCouresesList(response?.data);
+  }
+
+  async function handleCourseNavigate(getCurrentCourseId) {
+    const response = await checkCoursePurchaseInfoService(
+      getCurrentCourseId,
+      auth?.user?._id
+    );
+
+    if (response?.success) {
+      if (response?.data) {
+        navigate(`/course-progress/${getCurrentCourseId}`);
+      } else {
+        navigate(`/course/details/${getCurrentCourseId}`);
       }
-    
-    useEffect(()=>{
-      fetchAllStudentViewCourses()
-    },[])
+    }
+  }
 
+  useEffect(() => {
+    fetchAllStudentViewCourses();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -45,6 +73,7 @@ function StudentHomePage() {
               className="justify-start"
               variant="outline"
               key={categoryItem.id}
+              onClick={() => handleNavigateToCoursesPage(categoryItem.id)}
             >
               {categoryItem.label}
             </Button>
@@ -54,27 +83,35 @@ function StudentHomePage() {
       <section className="py-12 px-4 lg:px-8">
         <h2 className="text-2xl font-bold mb-6">Featured Coureses</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {
-            studentViewCouresesList && studentViewCouresesList.length > 0 ?
-            studentViewCouresesList.map(courseItem => <div className="border rounded-lg overflow-hidden shadow cursor-pointer">
-              <img
-              src={courseItem?.image}
-              width={300}
-              height={150}
-              className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-bold mb-2">{courseItem?.title}</h3>
-                <p className="text-sm text-gray-700 mb-2">{courseItem?.instructorName}</p>
-                <p className="font-bold text-[16px]">${courseItem?.pricing}</p>
+          {studentViewCouresesList && studentViewCouresesList.length > 0 ? (
+            studentViewCouresesList.map((courseItem) => (
+              <div 
+              onClick={() => handleCourseNavigate(courseItem?._id)}
+              className="border rounded-lg overflow-hidden shadow cursor-pointer">
+                <img
+                  src={courseItem?.image}
+                  width={300}
+                  height={150}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="font-bold mb-2">{courseItem?.title}</h3>
+                  <p className="text-sm text-gray-700 mb-2">
+                    {courseItem?.instructorName}
+                  </p>
+                  <p className="font-bold text-[16px]">
+                    ${courseItem?.pricing}
+                  </p>
+                </div>
               </div>
-            </div>) : <h1>No Courses Found</h1>
-          }
+            ))
+          ) : (
+            <h1>No Courses Found</h1>
+          )}
         </div>
       </section>
     </div>
   );
 }
-
 
 export default StudentHomePage;
