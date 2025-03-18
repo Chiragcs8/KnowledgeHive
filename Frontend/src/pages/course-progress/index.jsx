@@ -117,13 +117,14 @@ function StudentViewCourseProgressPage() {
     if (showConfetti) setTimeout(() => setShowConfetti(false), 15000);
   }, [showConfetti]);
 
-
   return (
     <div className="flex flex-col h-screen bg-[#1c1d1f] text-white">
       {showConfetti && <Confetti />}
-      <div className={`flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700 ${
-            isSideBarOpen ? "mr-[400px]" : ""
-          } transition-all duration-300`}>
+      <div
+        className={`flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700 ${
+          isSideBarOpen ? "mr-[400px]" : ""
+        } transition-all duration-300`}
+      >
         <div className="flex items-center space-x-4">
           <Button
             onClick={() => navigate("/student-courses")}
