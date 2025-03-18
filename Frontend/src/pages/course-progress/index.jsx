@@ -120,14 +120,12 @@ function StudentViewCourseProgressPage() {
   return (
     <div className="flex flex-col h-screen bg-[#1c1d1f] text-white">
       {showConfetti && <Confetti />}
-      <div
-        className={`flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700`}
-      >
+      <div className="flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700">
         <div className="flex items-center space-x-4">
           <Button
             onClick={() => navigate("/student-courses")}
             className="text-black"
-            variant="secondary"
+            variant="ghost"
             size="sm"
           >
             <ChevronLeft className="h-4 w-4 mr-2" />
@@ -163,7 +161,7 @@ function StudentViewCourseProgressPage() {
           </div>
         </div>
         <div
-          className={`fixed top-[69.2px] right-0 bottom-0 w-[400px] bg-[#1c1d1f] border-l border-gray-700 transition-all duration-300 ${
+          className={`fixed top-[64px] right-0 bottom-0 w-[400px] bg-[#1c1d1f] border-l border-gray-700 transition-all duration-300 ${
             isSideBarOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
