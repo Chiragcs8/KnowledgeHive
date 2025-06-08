@@ -41,7 +41,6 @@ function InstructorDashboard({ listOfCourses }) {
     };
   }
 
-  console.log(calculateTotalStudentsAndProfit());
 
   const config = [
     {
